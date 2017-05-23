@@ -19,6 +19,7 @@
 // STD LIB
 #include <string>
 #include <iostream>
+#include <cstdlib>
 
 using namespace std;
 using namespace cv;
@@ -29,10 +30,31 @@ class ImageProcessor
     public:
         ImageProcessor(std::string imageName);
 
+        /* Image Processing Methodsd */
+        std::string processNameImage();
+
+        int processTotalHealthImage();
+
+        int processRemainingHealthImage();
+
+        int processAtkImage();
+
+        int processDefImage();
+
+        int processResImage();
+
+        int processSpdImage();
+
+    private:
+        std::string imageName;
+        cv::Mat     imageObject;
+
+        std::string convertMatToPix(cv::Mat image);
+
         /* Cropping methods */
         cv::Mat cropNameFromImage();
 
-        cv::Mat cropHealthFromImage();
+        cv::Mat cropTotalHealthFromImage();
 
         cv::Mat cropRemainingHealthFromImage();
 
@@ -57,12 +79,6 @@ class ImageProcessor
         cv::Mat cropSlotCFromImage();
 
         cv::Mat cropSealFromImage();
-
-        std::string processNameImage();
-
-    private:
-        std::string imageName;
-        cv::Mat     imageObject;
 };
 
 #endif //FIRE_EMBLEM_AI_IMAGEPROCESSOR_H

@@ -27,8 +27,8 @@ ImageProcessor::ImageProcessor(std::string imageName)
 
     /* Crop the original image to the defined ROI */
     this->imageObject = image(roi) > 128;
-    imwrite("../files/processed/processed_" + imageName, this->imageObject);
 #if PROCESS_SHOW_IMAGE
+    imwrite("../files/processed/processed_" + imageName, this->imageObject);
     imshow("crop", this->imageObject);
     waitKey(0);
 #endif
@@ -54,54 +54,30 @@ cv::Mat ImageProcessor::cropNameFromImage()
 
 std::string ImageProcessor::processNameImage()
 {
-    Mat                    nameMat = cropNameFromImage();
-    tesseract::TessBaseAPI *api    = new tesseract::TessBaseAPI();
-
-    if(api->Init(nullptr, "eng"))
-    {
-        cerr << "Could not initialize tesseract.\n";
-        exit(1);
-    }
-    
-    PIX *pixS = pixCreate(nameMat.size().width, nameMat.size().height, 8);
-
-    for (int i = 0; i < nameMat.rows; ++i)
-    {
-        for (int j = 0; j < nameMat.cols; ++j)
-        {
-            pixSetPixel(pixS, j, i, (l_uint32) nameMat.at<uchar>(i, j));
-        }
-    }
-
-    api->SetImage(pixS);
-    char *outText = api->GetUTF8Text();
-
-    cout << "OCR  output: \n" << outText;
-    api->End();
-    delete [] outText;
-
-    pixDestroy(&pixS);
+    Mat         nameMat = cropNameFromImage();
+    std::string outText = convertMatToPix(nameMat);
 
 #if PROCESS_SHOW_IMAGE
+    cout << "Character Name : " << outText << endl;
     imshow("Name Label", nameMat);
     waitKey(0);
 #endif
-    return "Merp";
+
+    return outText;
 }
 
-cv::Mat ImageProcessor::cropHealthFromImage()
+cv::Mat ImageProcessor::cropTotalHealthFromImage()
 {
     /* Region of interest */
     Rect roi;
-    roi.x      = 360;
+    roi.x      = 490;
     roi.y      = 100;
-    roi.width  = 200;
+    roi.width  = 70;
     roi.height = 60;
 
     /* Crop the original image to the defined ROI */
     Mat hpLabel = imageObject(roi);
 
-    imwrite("../files/processed/processed_hp_" + imageName, hpLabel);
 #if PROCESS_SHOW_IMAGE
     imshow("HP Label", hpLabel);
     waitKey(0);
@@ -109,11 +85,55 @@ cv::Mat ImageProcessor::cropHealthFromImage()
     return hpLabel;
 }
 
+int ImageProcessor::processTotalHealthImage()
+{
+    cv::Mat hpLabel = cropTotalHealthFromImage();
+    std::string outText = convertMatToPix(hpLabel);
+
+#if PROCESS_SHOW_IMAGE
+    cout << "Character Total Health : " << outText << endl;
+    imshow("Health Label", hpLabel);
+    waitKey(0);
+#endif
+    return stoi(outText);
+}
+
 cv::Mat ImageProcessor::cropRemainingHealthFromImage()
-{}
+{
+    /* Region of interest */
+    Rect roi;
+    roi.x      = 350;
+    roi.y      = 100;
+    roi.width  = 100;
+    roi.height = 60;
+
+    /* Crop the original image to the defined ROI */
+    Mat hpLabel = imageObject(roi);
+
+#if PROCESS_SHOW_IMAGE
+    imshow("HP Label", hpLabel);
+    waitKey(0);
+#endif
+    return hpLabel;
+}
+
+int ImageProcessor::processRemainingHealthImage()
+{
+    cv::Mat hpLabel = cropRemainingHealthFromImage();
+    std::string outText = convertMatToPix(hpLabel);
+
+#if PROCESS_SHOW_IMAGE
+    cout << "Character Remaining Health : " << outText << endl;
+    imshow("Health Remaining Label", hpLabel);
+    waitKey(0);
+#endif
+    return stoi(outText);
+}
 
 cv::Mat ImageProcessor::cropAtkFromImage()
-{}
+{
+
+}
 
 cv::Mat ImageProcessor::cropDefFromImage()
 {}
@@ -144,3 +164,34 @@ cv::Mat ImageProcessor::cropSlotCFromImage()
 
 cv::Mat ImageProcessor::cropSealFromImage()
 {}
+
+std::string ImageProcessor::convertMatToPix(cv::Mat image)
+{
+    tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
+    string                 outText;
+
+    if (api->Init(nullptr, "eng"))
+    {
+        cerr << "Could not initialize tesseract.\n";
+        exit(1);
+    }
+
+    PIX *pixS = pixCreate(image.size().width, image.size().height, 8);
+
+    for (int i = 0; i < image.rows; ++i)
+    {
+        for (int j = 0; j < image.cols; ++j)
+        {
+            pixSetPixel(pixS, j, i, (l_uint32) image.at<uchar>(i, j));
+        }
+    }
+
+    api->SetImage(pixS);
+    outText = api->GetUTF8Text();
+
+    api->End();
+
+    pixDestroy(&pixS);
+    delete api;
+    return outText;
+}
