@@ -15,7 +15,7 @@ if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
-set(SOURCE_FILES main.cpp ImageProcessor.cpp ImageProcessor.h)
+set(SOURCE_FILES src/main.cpp src/ImageProcessor.cpp src/ImageProcessor.h)
 add_executable(fire_emblem_ai ${SOURCE_FILES})
 include_directories(${OpenCV_INCLUDE_DIRS})
 target_link_libraries(fire_emblem_ai ${OpenCV_LIBS} ${Boost_LIBRARIES})
