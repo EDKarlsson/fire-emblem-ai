@@ -1,4 +1,4 @@
-#Fire Emblem Heroes AI
+# Fire Emblem Heroes AI
 Project for making an AI to play Fire Emblem Heroes. Not intended to cheat the game but for me to learn about image processing and AI. Edit
 Add topics
 
