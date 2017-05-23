@@ -10,12 +10,25 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 # Find packages
 find_package(OpenCV REQUIRED)
 find_package(Boost 1.64.0 COMPONENTS system filesystem REQUIRED)
+find_package(Tesseract 3.05.0 REQUIRED)
+find_package(Leptonica 1.74.2 REQUIRED)
 
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
+if(Tesseract_FOUND)
+    include_directories(${Tesseract_INCLUDE_DIRS})
+endif()
+
+if(OpenCV_FOUND)
+    include_directories(${OpenCV_INCLUDE_DIRS})
+endif()
+
+if(Leptonica_FOUND)
+    include_directories(${Leptonica_INCLUDE_DIRS})
+endif()
+
 set(SOURCE_FILES src/main.cpp src/ImageProcessor.cpp src/ImageProcessor.h)
 add_executable(fire_emblem_ai ${SOURCE_FILES})
-include_directories(${OpenCV_INCLUDE_DIRS})
-target_link_libraries(fire_emblem_ai ${OpenCV_LIBS} ${Boost_LIBRARIES})
+target_link_libraries(fire_emblem_ai ${OpenCV_LIBS} ${Boost_LIBRARIES} ${Tesseract_LIBRARIES} ${Leptonica_LIBRARIES})
