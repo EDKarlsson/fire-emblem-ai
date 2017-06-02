@@ -29,6 +29,6 @@ if(Leptonica_FOUND)
     include_directories(${Leptonica_INCLUDE_DIRS})
 endif()
 
-set(SOURCE_FILES src/main.cpp src/ImageProcessor.cpp src/ImageProcessor.h)
+set(SOURCE_FILES src/main.cpp src/ImageProcessing/ImageProcessor.cpp src/ImageProcessing/ImageProcessor.h src/Core/Character.cpp src/Core/Character.h)
 add_executable(fire_emblem_ai ${SOURCE_FILES})
 target_link_libraries(fire_emblem_ai ${OpenCV_LIBS} ${Boost_LIBRARIES} ${Tesseract_LIBRARIES} ${Leptonica_LIBRARIES})

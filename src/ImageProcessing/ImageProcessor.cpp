@@ -17,13 +17,13 @@ ImageProcessor::ImageProcessor(std::string imageName)
     }
 
     /* Region of interest */
-    int  offset_x = 0;
-    int  offset_y = 810;
+    int  offset_x = 250;
+    int  offset_y = 2050;
     Rect roi;
-    roi.x      = 0;
-    roi.y      = 0;
-    roi.width  = image.size().width;
-    roi.height = image.size().height - (offset_y * 2);
+    roi.x      = image.size().width / 3 +  80;
+    roi.y      = 10;
+    roi.width  = image.size().width / 3;
+    roi.height = image.size().height - offset_y + 20;
 
     /* Crop the original image to the defined ROI */
     this->imageObject = image(roi) > 128;
@@ -57,8 +57,8 @@ std::string ImageProcessor::processNameImage()
     Mat         nameMat = cropNameFromImage();
     std::string outText = convertMatToPix(nameMat);
 
-#if PROCESS_SHOW_IMAGE
     cout << "Character Name : " << outText << endl;
+#if PROCESS_SHOW_IMAGE
     imshow("Name Label", nameMat);
     waitKey(0);
 #endif
@@ -78,10 +78,6 @@ cv::Mat ImageProcessor::cropTotalHealthFromImage()
     /* Crop the original image to the defined ROI */
     Mat hpLabel = imageObject(roi);
 
-#if PROCESS_SHOW_IMAGE
-    imshow("HP Label", hpLabel);
-    waitKey(0);
-#endif
     return hpLabel;
 }
 
@@ -90,8 +86,8 @@ int ImageProcessor::processTotalHealthImage()
     cv::Mat hpLabel = cropTotalHealthFromImage();
     std::string outText = convertMatToPix(hpLabel);
 
-#if PROCESS_SHOW_IMAGE
     cout << "Character Total Health : " << outText << endl;
+#if PROCESS_SHOW_IMAGE
     imshow("Health Label", hpLabel);
     waitKey(0);
 #endif
@@ -110,10 +106,6 @@ cv::Mat ImageProcessor::cropRemainingHealthFromImage()
     /* Crop the original image to the defined ROI */
     Mat hpLabel = imageObject(roi);
 
-#if PROCESS_SHOW_IMAGE
-    imshow("HP Label", hpLabel);
-    waitKey(0);
-#endif
     return hpLabel;
 }
 
@@ -122,8 +114,8 @@ int ImageProcessor::processRemainingHealthImage()
     cv::Mat hpLabel = cropRemainingHealthFromImage();
     std::string outText = convertMatToPix(hpLabel);
 
-#if PROCESS_SHOW_IMAGE
     cout << "Character Remaining Health : " << outText << endl;
+#if PROCESS_SHOW_IMAGE
     imshow("Health Remaining Label", hpLabel);
     waitKey(0);
 #endif
@@ -132,7 +124,30 @@ int ImageProcessor::processRemainingHealthImage()
 
 cv::Mat ImageProcessor::cropAtkFromImage()
 {
+    /* Region of interest */
+    Rect roi;
+    roi.x      = 340;
+    roi.y      = 185;
+    roi.width  = 100;
+    roi.height =  45;
 
+    /* Crop the original image to the defined ROI */
+    Mat atkLabel = imageObject(roi);
+
+    return atkLabel;
+}
+
+int ImageProcessor::processAtkImage()
+{
+    Mat atkLabel = cropAtkFromImage();
+    std::string outText = convertMatToPix(atkLabel);
+    
+    cout << "Character Attack : " << outText.substr(0,2) << endl;
+#if PROCESS_SHOW_IMAGE
+    imshow("Attack Label", atkLabel);
+    waitKey(0);
+#endif
+    return stoi(outText.substr(0,2));
 }
 
 cv::Mat ImageProcessor::cropDefFromImage()

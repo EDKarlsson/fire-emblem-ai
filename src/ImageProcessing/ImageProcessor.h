@@ -47,8 +47,10 @@ class ImageProcessor
 
     private:
         std::string imageName;
-        cv::Mat     imageObject;
 
+        cv::Mat imageObject;
+
+        /* Utility Methods */
         std::string convertMatToPix(cv::Mat image);
 
         /* Cropping methods */
