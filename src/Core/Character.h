@@ -4,31 +4,37 @@
 
 #ifndef FIRE_EMBLEM_AI_CHARACTER_H
 #define FIRE_EMBLEM_AI_CHARACTER_H
+#ifndef DEBUG
+#define DEBUG 1
+#endif
 
+#include <iostream>
 #include <string>
 
 using namespace std;
 
-enum WeaponColor
+namespace weapon
 {
-    RED,
-    BLUE,
-    GREEN,
-    NEUTRAL
-};
+    enum WeaponColor
+    {
+        RED,
+        BLUE,
+        GREEN,
+        NEUTRAL
+    };
 
-enum WeaponType
-{
-    SWORD,
-    TOME,
-    AXE,
-    LANCE,
-    BOWS,
-    STAVES,
-    DAGGERS,
-    BREATH
-};
-
+    enum WeaponType
+    {
+        SWORD,
+        TOME,
+        AXE,
+        LANCE,
+        BOWS,
+        STAVES,
+        DAGGERS,
+        BREATH
+    };
+}
 enum MovementType
 {
     INFANTRY,
@@ -40,8 +46,9 @@ enum MovementType
 class Character
 {
     public:
-        Character(int totalHealth, int remainingHealth, int attack, int speed, int defense, int resistance,
-                  const string &name);
+        Character(const string &name, int totalHealth, int remainingHealth, int attack, int speed, int defense,
+                  int resistance, MovementType moveType, weapon::WeaponColor weaponColor,
+                  weapon::WeaponType weaponType);
 
         void attackCharacter(Character &opponent);
 
@@ -75,18 +82,22 @@ class Character
 
         void setTotalHealth(int totalHealth);
 
+        bool rangedAttackAllowed();
+
+        bool canCounter();
+
     private:
-        int          totalHealth,
-                     remainingHealth,
-                     attack,
-                     speed,
-                     defense,
-                     resistance;
-        MovementType moveType;
-        WeaponColor  weaponColor;
-        WeaponType   weaponType;
-        string       name;
-        int          specialCounter;
+        int                 totalHealth,
+                            remainingHealth,
+                            attack,
+                            speed,
+                            defense,
+                            resistance;
+        MovementType        moveType;
+        weapon::WeaponColor weaponColor;
+        weapon::WeaponType  weaponType;
+        string              name;
+        int                 specialCounter;
 };
 
 #endif //FIRE_EMBLEM_AI_CHARACTER_H

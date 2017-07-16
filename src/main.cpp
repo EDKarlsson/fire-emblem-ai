@@ -1,11 +1,7 @@
-#include "ImageProcessing/ImageProcessor.h"
+#include "../test/combat.h"
 
 int main()
 {
-    ImageProcessor im("Azura_04.png");
-    im.processNameImage();
-//    im.processTotalHealthImage();
-//    im.processRemainingHealthImage();
-//    im.processAtkImage();
+    combat::test_attack_01();
     return 0;
 }
